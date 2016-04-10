@@ -1,27 +1,24 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
-
-public class Words 
+public class Words
 {
-	 CSVReader reader = new CSVReader(new FileReader("yourfile.csv"));
-     List myEntries = reader.readAll();
+	static List<String> StopList;
 	
-	
-	public boolean WordSet(String word)
+	public Words (String address) throws FileNotFoundException
 	{
-		while(worditer.hasNext())
-		{
-			System.out.println(worditer.next());
-		}
-		
-		return true;
+		Scanner inputStream = new Scanner (new File(address));
+		String data = inputStream.nextLine();
+		StopList = Arrays.asList(data.split(", "));
+		inputStream.close();
 	}
 	
-	public void AddWord(String word)
+	public static boolean WordCheck (String Word)
 	{
-		WordSet.add(word);
+		return StopList.contains(Word);
 	}
 }
