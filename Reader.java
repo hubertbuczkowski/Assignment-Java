@@ -1,18 +1,28 @@
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Scanner;
 
 public class Reader 
 {
-	File file = new File("prog4.dat");
+	static List<String> TextList;
 	
-	Scanner scanFile = new Scanner(new FileReader(file));
-	3ayList<String> words = new ArrayList<String>();
-	
-	String theWord;    
-
-	while (scanFile.hasNext())
+	public Reader(String Address) throws FileNotFoundException
 	{
-	    theWord = scanFile.next();
-	    words.add(theWord);
-	}
+		
+		Scanner inputStream = new Scanner (new File("Blood.txt"));
+		
+		while(inputStream.hasNext())
+		{
+			String word = inputStream.next();
+			if(TextList.contains(word) == false && Words.WordCheck(word) == false)
+			{
+				TextList.add(word);
+			}
+		}
+		
+        inputStream.close();
 
+
+	}
 }
