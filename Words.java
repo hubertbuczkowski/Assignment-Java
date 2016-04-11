@@ -1,162 +1,24 @@
-
-import java.awt.Insets;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.awt.Color;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
-public class MenuGUI extends JFrame implements ActionListener 
+
+public class Words
 {
-
-	private JPanel contentPane;
-	static JButton CSVbutton, txtbutton, Run;
-	static JTextArea log;
-	static JFileChooser fc1;
-	static JFileChooser fc2;
-	static int j = 0;
-
-	public MenuGUI()
+	static List<String> StopList;
+	
+	public Words (String address) throws FileNotFoundException
 	{
-		setTitle("Hubert's Assignment");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 400, 400);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		CSVbutton = new JButton("Open CSV file");
-		CSVbutton.addActionListener(this);
-		CSVbutton.setBounds(10, 10, 120, 25);
-		contentPane.add(CSVbutton);
-		
-		txtbutton = new JButton("Open TXT file");
-		txtbutton.addActionListener(this);
-		txtbutton.setBounds(250, 10, 120, 25);
-		contentPane.add(txtbutton);
-		
-		Run = new JButton("Run");
-		Run.addActionListener(this);
-		Run.setBounds(135, 320, 120, 25);
-		contentPane.add(Run);
-		
-		
-		log = new JTextArea(5,20);
-        log.setMargin(new Insets(5,5,5,5));
-        log.setEditable(false);
-        JScrollPane scrollPane= new JScrollPane(log);
-		scrollPane.setBackground(Color.WHITE);
-		scrollPane.setForeground(Color.BLACK);
-		scrollPane.setBounds(10, 45, 360, 260);
-		contentPane.add(scrollPane);
-		
-		fc1 = new JFileChooser();
-		fc2 = new JFileChooser();
-		
-		FileNameExtensionFilter filter1 = new FileNameExtensionFilter("CSV", "csv", "csv");
-		fc1.setFileFilter(filter1);
-		
-		FileNameExtensionFilter filter2 = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
-		fc2.setFileFilter(filter2);
-		
+		Scanner inputStream = new Scanner (new File(address));
+		String data = inputStream.nextLine();
+		StopList = Arrays.asList(data.split(", "));
+		inputStream.close();
 	}
 	
-	public void actionPerformed(ActionEvent e) 
+	public static boolean WordCheck (String Word)
 	{
-		
-		
-		if (e.getSource() == CSVbutton) 
-		{
-            int returnVal = fc1.showOpenDialog(MenuGUI.this);
-
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc1.getSelectedFile();
-                //This is where a real application would open the file.
-                log.append("Opening: " + file.getName() + "." + "\n");
-                if(j == 0 || j == 4)
-                {
-                	j=1;
-                }
-                else if(j == 2)
-                {
-                	j=3;
-                }
-                
-            } 
-            else 
-            {
-                log.append("Open command cancelled by user." + "\n");
-            }
-            log.setCaretPosition(log.getDocument().getLength());
-		}
-		
-		if (e.getSource() == txtbutton) 
-		{
-            int returnVal = fc2.showOpenDialog(MenuGUI.this);
-
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc2.getSelectedFile();
-                //This is where a real application would open the file.
-                log.append("Opening: " + file.getName() + "." + "\n");
-                
-                if(j == 0 || j == 4)
-                {
-                	j=2;
-                }
-                else if(j == 1)
-                {
-                	j=3;
-                }
-            } 
-            else 
-            {
-            	
-                log.append("Open command cancelled by user." + "\n");
-            }
-            log.setCaretPosition(log.getDocument().getLength());
-		}
-		
-		if (e.getSource() == Run) 
-		{
-			
-			
-			switch (j)
-			{
-			case 0: log.append("Choose CSV and Text file\n");
-					break;
-			case 1: log.append("Choose Text file\n");
-					break;
-			case 2: log.append("Choose CSV\n");
-					break;
-				
-			case 3: try 
-					{
-						log.append("\n\n");
-						Words wrds = new Words(fc1.getSelectedFile().getAbsolutePath());
-						Reader rdr = new Reader(fc2.getSelectedFile().getAbsolutePath());
-						log.append("\n\n");
-					} 
-					
-					catch (FileNotFoundException e1) 
-					{
-						e1.printStackTrace();
-					}
-					
-					j = 4;
-					break;
-			case 4: log.append("I'm Sorry byt you have to choose again text file\n");
-					j = 1;
-					break;
-			}
-		}
+		return StopList.contains(Word);
 	}
 }
