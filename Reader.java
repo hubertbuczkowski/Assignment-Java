@@ -32,7 +32,7 @@ public class Reader
 			if((TextList == null ||TextList.contains(word)== false) && Words.WordCheck(word) == false)
 			{
 				TextList.add(word);
-				WordAmount.add(1);
+				WordAmount.add(0);
 			}
 			if(TextList.contains(word) == true)
 			{
@@ -40,10 +40,12 @@ public class Reader
 			}
 		}
 		
+		
+		MenuGUI.log.append("--------------  10 Most Popular Words in Text  --------------\n\n");
 		for(i=0; i < 10; i++)
 		{
 			pointer = WordAmount.indexOf(Collections.max(WordAmount));
-			MenuGUI.log.append(TextList.get(pointer) + " - " + WordAmount.get(pointer) + "\n");
+			MenuGUI.log.append("|  ->  " + TextList.get(pointer) + "\n");
 			WordAmount.set(pointer, 0);
 		}
 		

@@ -1,26 +1,18 @@
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+
 import java.awt.Insets;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
-import javax.swing.Action;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JToolBar;
-import java.awt.ScrollPane;
-import javax.swing.JTextPane;
 import java.awt.Color;
 
 public class MenuGUI extends JFrame implements ActionListener 
@@ -31,11 +23,12 @@ public class MenuGUI extends JFrame implements ActionListener
 	static JTextArea log;
 	static JFileChooser fc1;
 	static JFileChooser fc2;
+	static int j = 0;
 
 	public MenuGUI()
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 353, 409);
+		setBounds(100, 100, 400, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -43,17 +36,17 @@ public class MenuGUI extends JFrame implements ActionListener
 		
 		CSVbutton = new JButton("Open CSV file");
 		CSVbutton.addActionListener(this);
-		CSVbutton.setBounds(10, 11, 111, 23);
+		CSVbutton.setBounds(10, 10, 120, 25);
 		contentPane.add(CSVbutton);
 		
 		txtbutton = new JButton("Open TXT file");
 		txtbutton.addActionListener(this);
-		txtbutton.setBounds(205, 11, 122, 23);
+		txtbutton.setBounds(250, 10, 120, 25);
 		contentPane.add(txtbutton);
 		
 		Run = new JButton("Run");
 		Run.addActionListener(this);
-		Run.setBounds(119, 323, 89, 23);
+		Run.setBounds(135, 320, 120, 25);
 		contentPane.add(Run);
 		
 		
@@ -63,16 +56,24 @@ public class MenuGUI extends JFrame implements ActionListener
         JScrollPane scrollPane= new JScrollPane(log);
 		scrollPane.setBackground(Color.WHITE);
 		scrollPane.setForeground(Color.BLACK);
-		scrollPane.setBounds(10, 69, 317, 235);
+		scrollPane.setBounds(10, 45, 360, 260);
 		contentPane.add(scrollPane);
 		
 		fc1 = new JFileChooser();
 		fc2 = new JFileChooser();
 		
+		FileNameExtensionFilter filter1 = new FileNameExtensionFilter("CSV", "csv", "csv");
+		fc1.setFileFilter(filter1);
+		
+		FileNameExtensionFilter filter2 = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
+		fc2.setFileFilter(filter2);
+		
 	}
 	
 	public void actionPerformed(ActionEvent e) 
 	{
+		
+		
 		if (e.getSource() == CSVbutton) 
 		{
             int returnVal = fc1.showOpenDialog(MenuGUI.this);
@@ -81,6 +82,15 @@ public class MenuGUI extends JFrame implements ActionListener
                 File file = fc1.getSelectedFile();
                 //This is where a real application would open the file.
                 log.append("Opening: " + file.getName() + "." + "\n");
+                if(j == 0 || j == 4)
+                {
+                	j=1;
+                }
+                else if(j == 2)
+                {
+                	j=3;
+                }
+                
             } 
             else 
             {
@@ -97,9 +107,19 @@ public class MenuGUI extends JFrame implements ActionListener
                 File file = fc2.getSelectedFile();
                 //This is where a real application would open the file.
                 log.append("Opening: " + file.getName() + "." + "\n");
+                
+                if(j == 0 || j == 4)
+                {
+                	j=2;
+                }
+                else if(j == 1)
+                {
+                	j=3;
+                }
             } 
             else 
             {
+            	
                 log.append("Open command cancelled by user." + "\n");
             }
             log.setCaretPosition(log.getDocument().getLength());
@@ -107,18 +127,36 @@ public class MenuGUI extends JFrame implements ActionListener
 		
 		if (e.getSource() == Run) 
 		{
-			log.append("\n\n");
 			
-			try {
-				Words wrds = new Words(fc1.getSelectedFile().getAbsolutePath());
 			
-			Reader rdr = new Reader(fc2.getSelectedFile().getAbsolutePath());
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			switch (j)
+			{
+			case 0: log.append("Choose CSV and Text file\n");
+					break;
+			case 1: log.append("Choose Text file\n");
+					break;
+			case 2: log.append("Choose CSV\n");
+					break;
+				
+			case 3: try 
+					{
+						log.append("\n\n");
+						Words wrds = new Words(fc1.getSelectedFile().getAbsolutePath());
+						Reader rdr = new Reader(fc2.getSelectedFile().getAbsolutePath());
+						log.append("\n\n");
+					} 
+					
+					catch (FileNotFoundException e1) 
+					{
+						e1.printStackTrace();
+					}
+					
+					j = 4;
+					break;
+			case 4: log.append("I'm Sorry byt you have to choose again text file\n");
+					j = 1;
+					break;
 			}
-			
-			
 		}
 	}
 }
