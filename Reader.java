@@ -43,7 +43,7 @@ public class Reader
 		for(i=0; i < 10; i++)
 		{
 			pointer = WordAmount.indexOf(Collections.max(WordAmount));
-			System.out.println(TextList.get(pointer) + " - " + WordAmount.get(pointer));
+			MenuGUI.log.append(TextList.get(pointer) + " - " + WordAmount.get(pointer) + "\n");
 			WordAmount.set(pointer, 0);
 		}
 		
