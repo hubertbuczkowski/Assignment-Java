@@ -1,4 +1,3 @@
-
 import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,7 +15,6 @@ import java.awt.Color;
 
 public class MenuGUI extends JFrame implements ActionListener 
 {
-
 	private JPanel contentPane;
 	static JButton CSVbutton, txtbutton, Run;
 	static JTextArea log;
@@ -24,6 +22,7 @@ public class MenuGUI extends JFrame implements ActionListener
 	static JFileChooser fc2;
 	static int j = 0;
 
+	// In here i add all the buttons, textbox etc. and set bounds and add action listeners.
 	public MenuGUI()
 	{
 		setTitle("Hubert's Assignment");
@@ -59,26 +58,29 @@ public class MenuGUI extends JFrame implements ActionListener
 		scrollPane.setBounds(10, 45, 360, 260);
 		contentPane.add(scrollPane);
 		
+		//It allows me to let user to browse files
 		fc1 = new JFileChooser();
 		fc2 = new JFileChooser();
 		
+		//This filters prevent user from choosing wrong type of file
 		FileNameExtensionFilter filter1 = new FileNameExtensionFilter("CSV", "csv", "csv");
 		fc1.setFileFilter(filter1);
 		
 		FileNameExtensionFilter filter2 = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
 		fc2.setFileFilter(filter2);
-		
 	}
 	
+	//Here are all actions which can be made
 	public void actionPerformed(ActionEvent e) 
 	{
 		
-		
+		//Actions for CSV button
 		if (e.getSource() == CSVbutton) 
 		{
             int returnVal = fc1.showOpenDialog(MenuGUI.this);
 
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
+            if (returnVal == JFileChooser.APPROVE_OPTION) 
+            {
                 File file = fc1.getSelectedFile();
                 //This is where a real application would open the file.
                 log.append("Opening: " + file.getName() + "." + "\n");
@@ -99,20 +101,22 @@ public class MenuGUI extends JFrame implements ActionListener
             log.setCaretPosition(log.getDocument().getLength());
 		}
 		
+		//Actions for txtbutton
 		if (e.getSource() == txtbutton) 
 		{
             int returnVal = fc2.showOpenDialog(MenuGUI.this);
 
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
+            if (returnVal == JFileChooser.APPROVE_OPTION) 
+            {
                 File file = fc2.getSelectedFile();
                 //This is where a real application would open the file.
                 log.append("Opening: " + file.getName() + "." + "\n");
                 
-                if(j == 0 || j == 4)
+                if(j == 0)
                 {
                 	j=2;
                 }
-                else if(j == 1)
+                else if(j == 1  || j == 4)
                 {
                 	j=3;
                 }
@@ -125,10 +129,10 @@ public class MenuGUI extends JFrame implements ActionListener
             log.setCaretPosition(log.getDocument().getLength());
 		}
 		
+		//Options for Run button. Display all messages 
+		//about choosing files and run if all files are chosen
 		if (e.getSource() == Run) 
 		{
-			
-			
 			switch (j)
 			{
 			case 0: log.append("Choose CSV and Text file\n");
@@ -145,7 +149,6 @@ public class MenuGUI extends JFrame implements ActionListener
 						Reader rdr = new Reader(fc2.getSelectedFile().getAbsolutePath());
 						log.append("\n\n");
 					} 
-					
 					catch (FileNotFoundException e1) 
 					{
 						e1.printStackTrace();
@@ -153,7 +156,8 @@ public class MenuGUI extends JFrame implements ActionListener
 					
 					j = 4;
 					break;
-			case 4: log.append("I'm Sorry byt you have to choose again text file\n");
+					
+			case 4: log.append("I'm Sorry but you have to choose again text file\n");
 					j = 1;
 					break;
 			}
