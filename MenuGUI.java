@@ -206,6 +206,7 @@ public class MenuGUI extends JFrame implements ActionListener
 			}
 		}
 		
+		//button responsible for adding stop word
 		if(e.getSource() == AddButton)
 		{
 			
@@ -228,6 +229,7 @@ public class MenuGUI extends JFrame implements ActionListener
 			}
 		}
 		
+		//responsible for deleting  stop word
 		if(e.getSource() == DelButton)
 		{
 			
