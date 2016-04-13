@@ -9,25 +9,33 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.awt.Color;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class MenuGUI extends JFrame implements ActionListener 
 {
 	private JPanel contentPane;
-	static JButton CSVbutton, txtbutton, Run;
+	static JButton CSVbutton, txtbutton, Run, DelButton, AddButton;
 	static JTextArea log;
 	static JFileChooser fc1;
 	static JFileChooser fc2;
 	static int j = 0;
+	private JTextField Stopword;
+	Words wrds;
+	Reader rdr;
+	String textbox;
 
 	// In here i add all the buttons, textbox etc. and set bounds and add action listeners.
 	public MenuGUI()
 	{
 		setTitle("Hubert's Assignment");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 400, 400);
+		setBounds(100, 100, 400, 503);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -35,28 +43,57 @@ public class MenuGUI extends JFrame implements ActionListener
 		
 		CSVbutton = new JButton("Open CSV file");
 		CSVbutton.addActionListener(this);
-		CSVbutton.setBounds(10, 10, 120, 25);
+		CSVbutton.setBounds(10, 21, 150, 40);
 		contentPane.add(CSVbutton);
 		
 		txtbutton = new JButton("Open TXT file");
 		txtbutton.addActionListener(this);
-		txtbutton.setBounds(250, 10, 120, 25);
+		txtbutton.setBounds(220, 21, 150, 40);
 		contentPane.add(txtbutton);
 		
 		Run = new JButton("Run");
 		Run.addActionListener(this);
-		Run.setBounds(135, 320, 120, 25);
+		Run.setBounds(10, 415, 360, 40);
 		contentPane.add(Run);
+        JScrollPane scrollPane= new JScrollPane();
+		scrollPane.setBackground(Color.WHITE);
+		scrollPane.setForeground(Color.BLACK);
+		scrollPane.setBounds(10, 144, 360, 260);
+		contentPane.add(scrollPane);
 		
 		
 		log = new JTextArea(5,20);
-        log.setMargin(new Insets(5,5,5,5));
-        log.setEditable(false);
-        JScrollPane scrollPane= new JScrollPane(log);
-		scrollPane.setBackground(Color.WHITE);
-		scrollPane.setForeground(Color.BLACK);
-		scrollPane.setBounds(10, 45, 360, 260);
-		contentPane.add(scrollPane);
+		scrollPane.setViewportView(log);
+		log.setMargin(new Insets(5,5,5,5));
+		log.setEditable(false);
+		
+		Stopword = new JTextField();
+		Stopword.setHorizontalAlignment(SwingConstants.CENTER);
+		Stopword.setText("Type Stopword");
+		Stopword.addFocusListener(new FocusListener() 
+		{
+			public void focusGained(FocusEvent e) 
+			{
+				Stopword.setText("");
+			}
+			public void focusLost(FocusEvent arg0)
+			{
+				textbox = Stopword.getText();
+			}
+		});
+		Stopword.setBounds(20, 72, 337, 25);
+		contentPane.add(Stopword);
+		Stopword.setColumns(10);
+		
+		AddButton = new JButton("Add Stopword");
+		AddButton.addActionListener(this);
+		AddButton.setBounds(35, 108, 150, 25);
+		contentPane.add(AddButton);
+		
+		DelButton = new JButton("Remove Stopword");
+		DelButton.addActionListener(this);
+		DelButton.setBounds(195, 108, 150, 25);
+		contentPane.add(DelButton);
 		
 		//It allows me to let user to browse files
 		fc1 = new JFileChooser();
@@ -92,6 +129,12 @@ public class MenuGUI extends JFrame implements ActionListener
                 {
                 	j=3;
                 }
+                
+                try {
+					wrds = new Words(fc1.getSelectedFile().getAbsolutePath());
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				}
                 
             } 
             else 
@@ -145,8 +188,8 @@ public class MenuGUI extends JFrame implements ActionListener
 			case 3: try 
 					{
 						log.append("\n\n");
-						Words wrds = new Words(fc1.getSelectedFile().getAbsolutePath());
-						Reader rdr = new Reader(fc2.getSelectedFile().getAbsolutePath());
+						//wrds = new Words(fc1.getSelectedFile().getAbsolutePath());
+						rdr = new Reader(fc2.getSelectedFile().getAbsolutePath());
 						log.append("\n\n");
 					} 
 					catch (FileNotFoundException e1) 
@@ -160,6 +203,50 @@ public class MenuGUI extends JFrame implements ActionListener
 			case 4: log.append("I'm Sorry but you have to choose again text file\n");
 					j = 1;
 					break;
+			}
+		}
+		
+		if(e.getSource() == AddButton)
+		{
+			
+			textbox = Stopword.getText();
+			
+			if(textbox.compareTo("Type Stopword") == 0)
+			{
+				log.append("First enter word into text box\n");
+			}
+			else
+			{
+				if (j == 1 || j == 3 || j == 4)
+				{
+					Words.AddWord(textbox);
+				}
+				else
+				{
+					log.append("Choose CSV\n");
+				}
+			}
+		}
+		
+		if(e.getSource() == DelButton)
+		{
+			
+			textbox = Stopword.getText();
+			
+			if(textbox.compareTo("Type Stopword") == 0)
+			{
+				log.append("First enter word into text box\n");
+			}
+			else
+			{
+				if (j == 1 || j == 3 || j == 4)
+				{
+					Words.DelWord(textbox);
+				}
+				else
+				{
+					log.append("Choose CSV\n");
+				}
 			}
 		}
 	}

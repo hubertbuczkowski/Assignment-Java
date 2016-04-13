@@ -43,7 +43,8 @@ public class Reader
 			
 			//Checks if word is stopword or if is in the list or if is empty
 			//if conditions are ok, id adds word to list and increase counter to proper list element
-			if((TextList == null ||TextList.contains(word)== false) && Words.WordCheck(word) == false && word.isEmpty() == false)
+			if((TextList == null ||TextList.contains(word)== false) && Words.WordCheck(word) == false && word.isEmpty() == false && 
+					(Words.AddedList.contains(word) == false || Words.AddedList == null))
 			{
 				TextList.add(word);
 				WordAmount.add(0);
